@@ -13,10 +13,6 @@ namespace flight
     {
         private bool isClickPause = false;
         private Engine _simulationObject = null;
-        private double _x = 0;
-        private double _y = 0;
-        private double _x0 = 0;
-        private double _y0 = 0;
         private double _g = 10;
         private double _gY = -10;
         private double _gX = 0;
@@ -36,12 +32,13 @@ namespace flight
 
         private void StartButton_Click(object sender, EventArgs e)
         {
+            double x0 = 0;
             double y0 = (double)HeightNumericUpDown.Value;
             double v0 = (double)SpeedNumericUpDown.Value;
             double angle = (double)AngleNumericUpDown.Value % 90;
             double _g = (double)gNumericUpDown1.Value;
             _dt = (double)numericUpDown5.Value / 50;
-            StartGame(y0,v0, angle, _g);
+            StartGame(y0,v0, angle, _g, x0);
         }
 
         private void PauseButton_Click(object sender, EventArgs e)
@@ -63,30 +60,35 @@ namespace flight
         private void timer1_Tick(object sender, EventArgs e)
         {
             label4.Text = $"Time: {_time += _dt}";
+            
             Point currentPoint = _simulationObject.GetNextPoint();
+            
             chart1.Series[0].Points.AddXY(currentPoint.X, currentPoint.Y);
+           
             if (currentPoint.Y< 0)
             {
                 StopGame();
             }
         }
 
-        private void StartGame(double y0, double v0, double angle, double g)
+        private void StartGame(double y0, double v0, double angle, double g, double x0)
         {
             if (timer1.Enabled)
                 return;
             _gY = -_g;
             chart1.Series[0].Points.Clear();
-            _simulationObject = new Engine(new Point(_x0, y0), v0, _dt, _gX, _gY, angle);
-            _x = _x0;
-            _y = y0;
-            double maxH = _y + Calculations.GetMaxHeight(v0, angle, g) + 1;
-            double maxLength = _x + Calculations.GetMaxLengthOfFlight(v0, angle, g,_y0) + 1;
+            _simulationObject = new Engine(new Point(x0, y0), v0, _dt, _gX, _gY, angle);
+            
+            double maxH = y0 + Calculations.GetMaxHeight(v0, angle, g) + 1;
+            double maxLength = x0 + Calculations.GetMaxLengthOfFlight(v0, angle, g, y0) + 1;
+            
             chart1.ChartAreas[0].AxisX.Maximum = maxLength;
             chart1.ChartAreas[0].AxisY.Maximum = maxH;
+            
             numericUpDown2.Value = (int)maxLength;
             numericUpDown4.Value = (int)maxH;
-            chart1.Series[0].Points.AddXY(_x, _y);
+            
+            chart1.Series[0].Points.AddXY(x0, y0);
             timer1.Start();
         }
 

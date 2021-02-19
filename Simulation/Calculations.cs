@@ -34,7 +34,7 @@ namespace Simulation
             double t1 = v0 * Math.Sin(a) / g;
             double h1 = h + v0 * Math.Sin(a) * t1 - h * t1 * t1 / g;
             double t2 = Math.Sqrt(2 * h1 / g);
-            return v0*Math.Cos(a)*(t1+t2);
+            return v0 * Math.Cos(a) * (t1 + t2);
         }
     }
 }
