@@ -84,7 +84,7 @@ namespace flight
             
             chart1.ChartAreas[0].AxisX.Maximum = maxLength;
             chart1.ChartAreas[0].AxisY.Maximum = maxH;
-            
+            //
             numericUpDown2.Value = (int)maxLength;
             numericUpDown4.Value = (int)maxH;
             
